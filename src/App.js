@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import './App.css'
-
+import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles'
+import CssBaseline from '@material-ui/core/CssBaseline'
+import { withStyles, withTheme } from '@material-ui/core/styles'
 // components
 import NavBar from './components/NavBar'
 import List from '@material-ui/core/List'
@@ -10,8 +12,6 @@ import TextField from '@material-ui/core/TextField'
 import Typography from '@material-ui/core/Typography'
 
 // styles
-import CssBaseline from '@material-ui/core/CssBaseline'
-import { withStyles } from '@material-ui/core/styles'
 
 const drawerWidth = 240
 
@@ -38,32 +38,35 @@ class App extends Component {
   }
 
   render() {
-    const { classes } = this.props
+    const { classes, theme } = this.props;
+    console.log(theme)
     return (
       <div className={classes.root}>
         <CssBaseline />
-        <NavBar {...this.props} />
-        <main className={classes.content}>
-          <List>{mainListItems}</List>
-          <div className={classes.appBody}>
-            <Preview {...this.props} />
-            <Typography className={classes.title} variant="h5" component="h2">
-              Learn Regex
-            </Typography>
-            <TextField
-              id="standard-name"
-              label="Expression"
-              className={classes.textField}
-              value={this.state.expression}
-              onChange={this.handleChange}
-              margin="normal"
-              inputProps={{color:"white"}}
-            />
-            <Typography component="p" color="secondary">
-              {this.state.text}
-            </Typography>
-          </div>
-        </main>
+          <MuiThemeProvider theme={this.props.theme}>
+          <NavBar {...this.props} />
+          <main className={classes.content}>
+            <List>{mainListItems}</List>
+            <div className={classes.appBody}>
+              <Preview {...this.props} />
+              <Typography className={classes.title} variant="h5" component="h2">
+                Learn Regex
+              </Typography>
+              <TextField
+                label="Expression"
+                className={classes.textField}
+                value={this.state.expression}
+                onChange={this.handleChange}
+                margin="normal"
+                InputProps={{ inputProps: { style : { color : 'white' }} }}
+
+              />
+              <Typography component="p" color="secondary">
+                {this.state.text}
+              </Typography>
+            </div>
+          </main>
+        </MuiThemeProvider>
       </div>
     )
   }
@@ -165,4 +168,4 @@ const styles = theme => ({
   }
 })
 
-export default withStyles(styles)(App)
+export default withTheme()(withStyles(styles)(App))
