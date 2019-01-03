@@ -4,6 +4,7 @@ import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import { withStyles, withTheme } from '@material-ui/core/styles'
 // components
+import Divider from '@material-ui/core/Divider'
 import NavBar from './components/NavBar'
 import List from '@material-ui/core/List'
 import { mainListItems } from './listItems'
@@ -20,49 +21,62 @@ class App extends Component {
     expression: '',
     text:
       'RegExr was created by gskinner.com, and is proudly hosted by Media Temple.Edit the Expression & Text to see matches. Roll over matches or the expression for details. PCRE & Javascript flavors of RegEx are supported.The side bar includes a Cheatsheet, full Reference, and Help. You can also Save & Share with the Community, and view patterns you create or favorite in My Patterns. Explore results with the Tools below. Replace & List output custom results. Details lists capture groups. Explain describes your expression in plain English.',
-    evaluatedText: ''
+    evaluatedText: 'testing'
   }
-  handleChange = e => {
+
+  handleChange = field => e => {
     e.preventDefault()
     const inputValue = e.target.value
-    this.setState(prevState => ({
-      expression: inputValue && inputValue,
-      evaluatedText: prevState.text.match(inputValue)
-    }))
-    // console.log(e.target.value)
+    // this.setState(prevState => ({
+    //   [field]: inputValue && inputValue,
+    //   evaluatedText: prevState.text.match(inputValue)
+    // }))
+    console.log('target value: ', e.target.value)
+    this.evaluateText(this.state.text, e.target.value)
   }
   evaluateText = (text, expression) => {
+    // let something = RegExp(expression, 'g')
     console.log('text: ', text)
-    console.log('expression: ', expression)
+    const decomposed = new String(expression);
+    console.log('lalala',  );
+    console.log('evaluatedText: ', new RegExp(expression).exec(text))
     return ''
   }
 
   render() {
-    const { classes, theme } = this.props;
-    console.log(theme)
+    const { classes, theme } = this.props
+    // console.log(theme)
     return (
       <div className={classes.root}>
         <CssBaseline />
-          <MuiThemeProvider theme={this.props.theme}>
+        <MuiThemeProvider theme={this.props.theme}>
           <NavBar {...this.props} />
           <main className={classes.content}>
             <List>{mainListItems}</List>
             <div className={classes.appBody}>
               <Preview {...this.props} />
-              <Typography className={classes.title} variant="h5" component="h2">
+              <Typography
+                style={{ color: 'white' }}
+                variant="h5"
+                component="h2"
+              >
                 Learn Regex
               </Typography>
               <TextField
                 label="Expression"
                 className={classes.textField}
                 value={this.state.expression}
-                onChange={this.handleChange}
+                onChange={this.handleChange('expression')}
                 margin="normal"
-                InputProps={{ inputProps: { style : { color : 'white' }} }}
-
+                InputProps={{ inputProps: { style: { color: 'white' } } }}
               />
               <Typography component="p" color="secondary">
                 {this.state.text}
+              </Typography>
+              <Divider light />
+              <br />
+              <Typography style={{ color: 'green' }} component="p" variant="h2">
+                {this.state.evaluatedText}
               </Typography>
             </div>
           </main>
