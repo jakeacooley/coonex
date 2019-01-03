@@ -6,6 +6,7 @@ import NavBar from './components/NavBar'
 import List from '@material-ui/core/List'
 import { mainListItems } from './listItems'
 import Preview from './components/Preview'
+import TextField from '@material-ui/core/TextField'
 import Typography from '@material-ui/core/Typography'
 
 // styles
@@ -15,6 +16,27 @@ import { withStyles } from '@material-ui/core/styles'
 const drawerWidth = 240
 
 class App extends Component {
+  state = {
+    expression: '',
+    text:
+      'RegExr was created by gskinner.com, and is proudly hosted by Media Temple.Edit the Expression & Text to see matches. Roll over matches or the expression for details. PCRE & Javascript flavors of RegEx are supported.The side bar includes a Cheatsheet, full Reference, and Help. You can also Save & Share with the Community, and view patterns you create or favorite in My Patterns. Explore results with the Tools below. Replace & List output custom results. Details lists capture groups. Explain describes your expression in plain English.',
+    evaluatedText: ''
+  }
+  handleChange = e => {
+    e.preventDefault()
+    const inputValue = e.target.value
+    this.setState(prevState => ({
+      expression: inputValue && inputValue,
+      evaluatedText: prevState.text.match(inputValue)
+    }))
+    // console.log(e.target.value)
+  }
+  evaluateText = (text, expression) => {
+    console.log('text: ', text)
+    console.log('expression: ', expression)
+    return ''
+  }
+
   render() {
     const { classes } = this.props
     return (
@@ -28,6 +50,18 @@ class App extends Component {
             <Typography className={classes.title} variant="h5" component="h2">
               Learn Regex
             </Typography>
+            <TextField
+              id="standard-name"
+              label="Expression"
+              className={classes.textField}
+              value={this.state.expression}
+              onChange={this.handleChange}
+              margin="normal"
+              inputProps={{color:"white"}}
+            />
+            <Typography component="p" color="secondary">
+              {this.state.text}
+            </Typography>
           </div>
         </main>
       </div>
@@ -38,11 +72,6 @@ class App extends Component {
 const styles = theme => ({
   root: {
     display: 'flex'
-  },
-  main: {
-    flex: 1
-    // marginTop: 100
-    // flexDirection: 'row'
   },
   appBody: {
     display: 'flex',
@@ -128,6 +157,11 @@ const styles = theme => ({
   },
   h5: {
     marginBottom: theme.spacing.unit * 2
+  },
+  textField: {
+    marginLeft: theme.spacing.unit,
+    marginRight: theme.spacing.unit,
+    width: 200
   }
 })
 
