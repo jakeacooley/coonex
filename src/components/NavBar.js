@@ -10,7 +10,10 @@ import MenuIcon from '@material-ui/icons/Menu'
 export default props => {
   const { classes } = props
   return (
-    <AppBar position="fixed" color="primary" className={classes.appBar}>
+    <AppBar
+      position="fixed"
+      color="primary"
+      className={classes.appBar}>
       <Toolbar className={classes.toolbar}>
         <IconButton
           color="inherit"

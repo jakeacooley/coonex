@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import './App.css'
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles'
 import CssBaseline from '@material-ui/core/CssBaseline'
-import { withStyles, withTheme } from '@material-ui/core/styles'
+import { withStyles } from '@material-ui/core/styles'
 // components
 import Divider from '@material-ui/core/Divider'
 import NavBar from './components/NavBar'
@@ -11,10 +11,12 @@ import { mainListItems } from './listItems'
 import Preview from './components/Preview'
 import TextField from '@material-ui/core/TextField'
 import Typography from '@material-ui/core/Typography'
-
+import Grid from '@material-ui/core/Grid'
+import styles from './styles.js';
+console.log(styles);
 // styles
 
-const drawerWidth = 240
+
 
 class App extends Component {
   state = {
@@ -24,22 +26,46 @@ class App extends Component {
     evaluatedText: 'testing'
   }
 
-  handleChange = field => e => {
-    e.preventDefault()
-    const inputValue = e.target.value
-    // this.setState(prevState => ({
-    //   [field]: inputValue && inputValue,
-    //   evaluatedText: prevState.text.match(inputValue)
-    // }))
-    console.log('target value: ', e.target.value)
-    this.evaluateText(this.state.text, e.target.value)
+  handleChange = field => async (e) => {
+    e.preventDefault();
+    let inputValue = e.target.value && new String(e.target.value);
+    this.setState(prevState => ({
+        [field]: `${inputValue}`,
+    }))
+    // if (toTailString) {
+    //   console.log('TOTAIL STRING IS STARTING', toTailString)
+    //   if (toTailString[0] === '/') toTailString = toTailString.substring(1, toTailString.length);
+    //    //if last one is a / remove it;
+    //    //
+    //
+    //   console.log('REMOVED / is ', toTailString[toTailString.length -1])
+    //     toTailString = toTailString.substring(0, toTailString.length);
+    //     console.log('REMOVED LAST /', toTailString)
+    //   } else {
+    //     const inputedValue = toTailString.substring(toTailString.length -1);
+    //     toTailString = toTailString.substring(0, toTailString.length -2).concat(inputedValue);
+    //     console.log('REMOVED LAST / after delete', toTailString)
+    //   }
+    //   console.log('aiaiaia', e.target.value)
+    //   //  toTailString = totail.substring(0, totailString.length - 2) toTailString.concat(toTailString.substring[toTailString.length-1]);
+    //   // console.log('INPUT VALUE SO FAR', toTailString)
+    //   // tailString
+    //   // console.log('TAILED STRING', tailString)
+    //
+    //   let inputValue = toTailString;
+    //   if (!inputValue) inputValue = '';
+
+    //   // if (inputValue.length > 2) await this.evaluateText(this.state.text, inputValue)
+    // }
+
   }
-  evaluateText = (text, expression) => {
+  evaluateText = async (text, expression) => {
     // let something = RegExp(expression, 'g')
     console.log('text: ', text)
     const decomposed = new String(expression);
-    console.log('lalala',  );
-    console.log('evaluatedText: ', new RegExp(expression).exec(text))
+    this.setState(prevState => ({
+      evaluatedText: prevState.text.match(prevState.expression)
+    }))
     return ''
   }
 
@@ -47,139 +73,81 @@ class App extends Component {
     const { classes, theme } = this.props
     // console.log(theme)
     return (
-      <div className={classes.root}>
-        <CssBaseline />
-        <MuiThemeProvider theme={this.props.theme}>
+      <Grid  direction='column' container >
+        <Grid item
+        style={{minHeight: '70px'}}>
           <NavBar {...this.props} />
-          <main className={classes.content}>
-            <List>{mainListItems}</List>
-            <div className={classes.appBody}>
-              <Preview {...this.props} />
+        </Grid>
+        <Grid
+          container
+          direction='column'
+          style={{
+            alignItems : 'center',
+            padding : '20px 20px 20px 20px',
+            minHeight: '92vh'
+          }}>
+          {/*<List>{mainListItems}</List>*/}
+            <Grid item style={{flex : '0.1 0 10%'}} >
               <Typography
-                style={{ color: 'white' }}
-                variant="h5"
-                component="h2"
+              style={{ color: 'white' }}
+              variant="h5"
+              component="h2"
               >
                 Learn Regex
               </Typography>
+            </Grid>
+            <Grid item style={{flex : '0.5 0 50%'}}>
+              <Preview {...this.props} />
+            </Grid>
+            <Grid item style={{flex : '0.1 0 10%', width: '100%'}}>
               <TextField
-                label="Expression"
+                label="Text To Evaluate"
                 className={classes.textField}
                 value={this.state.expression}
                 onChange={this.handleChange('expression')}
-                margin="normal"
-                InputProps={{ inputProps: { style: { color: 'white' } } }}
+                margin="dense"
+                multiline={true}
+                variant="outlined"
+                rowsMax="5"
+                rows="5"
+                style={{width : '100%'}}
+                InputProps={{
+                  inputProps: {
+                    style: { color: 'white' }
+                  }
+                }}
               />
-              <Typography component="p" color="secondary">
+            </Grid>
+            {/*<Grid item style={{flex : '0.2 0 20%'}}>
+              <Typography
+                component="h5"
+                variant="h5"
+                color="secondary">
                 {this.state.text}
               </Typography>
-              <Divider light />
-              <br />
-              <Typography style={{ color: 'green' }} component="p" variant="h2">
+            </Grid>*/}
+            <Grid item style={{flex : '0.3 0 30%', width: '100%'}}>
+              <Typography
+                variant='h4'
+                align='center'
+                color='secondary'
+              >
+                Rsultsss
+              </Typography>
+              <Typography
+                style={{ color: 'green' }}
+                variant="h4"
+                component='p'
+                >
                 {this.state.evaluatedText}
               </Typography>
-            </div>
-          </main>
-        </MuiThemeProvider>
-      </div>
+            </Grid>
+        </Grid>
+      </Grid>
     )
   }
 }
 
-const styles = theme => ({
-  root: {
-    display: 'flex'
-  },
-  appBody: {
-    display: 'flex',
-    backgroundColor: '#282c34',
-    minHeight: '100vh',
-    width: '100%',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    fontSize: 'calc(10px + 2vmin)'
-  },
-  toolbar: {
-    paddingRight: 24 // keep right padding when drawer closed
-  },
-  toolbarIcon: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-    padding: '0 8px',
-    ...theme.mixins.toolbar
-  },
-  appBar: {
-    zIndex: theme.zIndex.drawer + 1,
-    transition: theme.transitions.create(['width', 'margin'], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen
-    })
-  },
-  appBarShift: {
-    marginLeft: drawerWidth,
-    width: `calc(100% - ${drawerWidth}px)`,
-    transition: theme.transitions.create(['width', 'margin'], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen
-    })
-  },
-  menuButton: {
-    marginLeft: 12,
-    marginRight: 36
-  },
-  menuButtonHidden: {
-    display: 'none'
-  },
-  title: {
-    flexGrow: 1,
-    color: 'white'
-  },
-  drawerPaper: {
-    position: 'relative',
-    whiteSpace: 'nowrap',
-    width: drawerWidth,
-    transition: theme.transitions.create('width', {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen
-    })
-  },
-  drawerPaperClose: {
-    overflowX: 'hidden',
-    transition: theme.transitions.create('width', {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen
-    }),
-    width: theme.spacing.unit * 7,
-    [theme.breakpoints.up('sm')]: {
-      width: theme.spacing.unit * 9
-    }
-  },
-  appBarSpacer: theme.mixins.toolbar,
-  content: {
-    display: 'flex',
-    flexGrow: 1,
-    flexDirection: 'row',
-    padding: theme.spacing.unit * 3,
-    paddingTop: theme.mixins.toolbar.minHeight,
-    height: '100vh',
-    overflow: 'auto'
-  },
-  chartContainer: {
-    marginLeft: -22
-  },
-  tableContainer: {
-    height: 320
-  },
-  h5: {
-    marginBottom: theme.spacing.unit * 2
-  },
-  textField: {
-    marginLeft: theme.spacing.unit,
-    marginRight: theme.spacing.unit,
-    width: 200
-  }
-})
 
-export default withTheme()(withStyles(styles)(App))
+
+export default withStyles(styles)(App)
