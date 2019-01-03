@@ -106,7 +106,7 @@ Object.keys(defaultTheme.typography).forEach((variantName) => {
 ReactDOM.render(
   <MuiThemeProvider theme={defaultTheme}>
     <CssBaseline />
-    <App />
+    <App theme={defaultTheme}/>
   </MuiThemeProvider>, document.getElementById('root'));
 
 // If you want your app to work offline and load faster, you can change
