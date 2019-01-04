@@ -2,9 +2,8 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import classNames from 'classnames'
 import Avatar from '@material-ui/core/Avatar'
+import Button from '@material-ui/core/Button'
 import Chip from '@material-ui/core/Chip'
-import FaceIcon from '@material-ui/icons/Face'
-import DoneIcon from '@material-ui/icons/Done'
 import { withStyles } from '@material-ui/core/styles'
 import Drawer from '@material-ui/core/Drawer'
 import Grid from '@material-ui/core/Grid'
@@ -12,18 +11,14 @@ import TextField from '@material-ui/core/TextField'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import AppBar from '@material-ui/core/AppBar'
 import Toolbar from '@material-ui/core/Toolbar'
-import List from '@material-ui/core/List'
 import Typography from '@material-ui/core/Typography'
 import Divider from '@material-ui/core/Divider'
 import IconButton from '@material-ui/core/IconButton'
 import MenuIcon from '@material-ui/icons/Menu'
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft'
 import ChevronRightIcon from '@material-ui/icons/ChevronRight'
-import ListItem from '@material-ui/core/ListItem'
-import ListItemIcon from '@material-ui/core/ListItemIcon'
-import ListItemText from '@material-ui/core/ListItemText'
-import InboxIcon from '@material-ui/icons/MoveToInbox'
-import MailIcon from '@material-ui/icons/Mail'
+import Flag from '@material-ui/icons/Flag'
+import OutlinedFlag from '@material-ui/icons/OutlinedFlag'
 import Preview from './components/Preview'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 
@@ -86,16 +81,64 @@ const styles = theme => ({
   }
 })
 
+const getFlags = () => [
+  {
+    id: 'flagGlobal',
+    content: 'Search over the entire provided text',
+    expression: 'g',
+    flagged: true
+  },
+  {
+    id: 'flagCaseInsensitive',
+    content: 'Case Insensitive',
+    expression: 'i',
+    flagged: true
+  },
+  {
+    id: 'flagSplitter',
+    content: 'Evaluate each word of the text separately',
+    expression: 'splitter',
+    flagged: true
+  }
+]
+
 const getItems = count => [
   {
     id: 'anchorStartsWith',
     content: 'starts with',
-    expression: '^'
+    expression: '^',
+    value: ''
+  },
+  {
+    id: 'anyCharacter',
+    position: 'pre',
+    content: 'Any Character',
+    expression: '.',
+    value: ''
+  },
+  {
+    id: 'quantifierAnyNumberOfTimes',
+    content: 'Any Number of Times',
+    expression: '*',
+    value: ''
+  },
+  {
+    id: 'rangeOpen',
+    content: 'Start Range',
+    expression: '[',
+    value: ''
+  },
+  {
+    id: 'rangeClose',
+    content: 'Close Range',
+    expression: ']',
+    value: ''
   },
   {
     id: 'anchorEndsWith',
     content: 'ends with',
-    expression: '$a'
+    expression: '$',
+    value: ''
   }
 ]
 
@@ -148,6 +191,7 @@ class App extends React.Component {
   state = {
     open: false,
     draggableList: getItems(5),
+    flagList: getFlags(),
     selectedList: []
   }
 
@@ -215,17 +259,49 @@ class App extends React.Component {
     }
   }
 
+  handleFlagClick = id => {
+    let { flagList } = this.state
+
+    const newFlagList = flagList.map((flag, idx) => {
+      if (flag.id === id) flag.flagged = !flag.flagged
+      return flag
+    })
+
+    this.setState({ flagList: newFlagList })
+  }
+
   render() {
     const { classes, theme } = this.props
     const { open } = this.state
 
     let concatenatedExpression = ''
-    this.state.selectedList.forEach(item => {
+
+    this.state.selectedList.forEach((item, index) => {
       console.log(item)
+      if (index === 0) {
+        concatenatedExpression = concatenatedExpression.concat(item.expression)
+        return (concatenatedExpression = concatenatedExpression.concat(
+          item.value
+        ))
+      }
+      concatenatedExpression = concatenatedExpression.concat(item.value)
       concatenatedExpression = concatenatedExpression.concat(item.expression)
     })
     console.log('concat: ', concatenatedExpression)
-
+    let flags = ''
+    this.state.flagList.forEach(flag =>
+      flag.flagged && flag.id !== 'flagSplitter'
+        ? (flags = flags.concat(flag.expression))
+        : null
+    )
+    let expression
+    try {
+      new RegExp(concatenatedExpression, flags)
+      expression = new RegExp(concatenatedExpression, flags)
+    } catch (err) {
+      expression = ''
+    }
+    console.log('EXPRESSION IS', expression)
     return (
       <DragDropContext onDragEnd={this.onDragEnd}>
         <div className={classes.root}>
@@ -293,11 +369,7 @@ class App extends React.Component {
                           )}
                         >
                           <Chip
-                            avatar={
-                              <Avatar>
-                                <FaceIcon />
-                              </Avatar>
-                            }
+                            avatar={<Avatar>{item.expression}</Avatar>}
                             label={item.content}
                             clickable
                             className={classes.chip}
@@ -313,6 +385,18 @@ class App extends React.Component {
                 </div>
               )}
             </Droppable>
+            {this.state.flagList.map((flag, index) => (
+              <Button
+                key={flag.id}
+                variant="outlined"
+                size="small"
+                onClick={() => this.handleFlagClick(flag.id)}
+                // className={classes.button}
+              >
+                <Typography component="h4">{flag.content}</Typography>
+                {flag.flagged ? <Flag /> : <OutlinedFlag />}
+              </Button>
+            ))}
             {/* </DragDropContext> */}
           </Drawer>
           <main
@@ -360,11 +444,7 @@ class App extends React.Component {
                             )}
                           >
                             <Chip
-                              avatar={
-                                <Avatar>
-                                  <FaceIcon />
-                                </Avatar>
-                              }
+                              avatar={<Avatar>{item.expression}</Avatar>}
                               label={item.content}
                               clickable
                               className={classes.chip}
@@ -386,8 +466,8 @@ class App extends React.Component {
               <TextField
                 label="Text To Evaluate"
                 className={classes.textField}
-                value={this.state.expression}
-                onChange={this.handleChange('expression')}
+                value={this.state.text}
+                onChange={this.handleChange('text')}
                 margin="dense"
                 multiline={true}
                 variant="outlined"
@@ -414,7 +494,7 @@ class App extends React.Component {
                 Rsultsss
               </Typography>
               <Typography style={{ color: 'green' }} variant="h4" component="p">
-                {this.state.evaluatedText}
+                {this.state.text && this.state.text.match(expression)}
               </Typography>
             </Grid>
           </main>
