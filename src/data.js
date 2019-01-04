@@ -5,6 +5,7 @@ const getFlags = () => [
     expression: 'g',
     flagged: true
   },
+
   {
     id: 'flagCaseInsensitive',
     content: 'Case Insensitive',
@@ -13,37 +14,57 @@ const getFlags = () => [
   },
   {
     id: 'flagSplitter',
-    content: 'Evaluate each word of the text separately',
+    content: 'Split Text into Words',
     expression: 'splitter',
-    flagged: true
-  }
+    flagged: false
+  },
 ];
 
 
 const getOperators = () => [
   {
     id: 'anchorStartsWith',
-    content: 'starts with',
+    content: 'Starts With',
     expression: '^',
     value: ''
   },
   {
+
     id: 'character',
     content: 'Character',
     expression: '',
     value: ''
   },
   {
+    id : 'anyCharacterAll',
+    content : 'Any Character',
+    expression: '\\w',
+    value : ''
+  },
+  {
     id: 'anyCharacter',
     position: 'pre',
-    content: 'Any Character',
+    content: 'Any Character (Not Digit)',
     expression: '.',
     value: ''
   },
   {
+    id: 'anyNumber',
+    position: 'pre',
+    content: 'Any Digit',
+    expression: '\\d',
+    value: ''
+  },
+  {
     id: 'quantifierAnyNumberOfTimes',
-    content: 'Any Number of Times',
+    content: '0 Or More Times ',
     expression: '*',
+    value: ''
+  },
+  {
+    id: 'quantifierOneOrMoreNumberOfTimes',
+    content: '1 Or More Times ',
+    expression: '+',
     value: ''
   },
   {
@@ -62,6 +83,7 @@ const getOperators = () => [
     id: 'anchorEndsWith',
     content: 'ends with',
     expression: '$',
+    pre: 'true',
     value: ''
   }
 ]

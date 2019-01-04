@@ -36,28 +36,28 @@ const defaultTheme = createMuiTheme({
     },
     error: red,
     background: {
-      default: "#3f51b5",
+      default: "#282c34",
       paper: "#3f51b5",
       toolbar: '#000',
       button : red['A200']
     },
     text : {
-      primary : '#000',
-      secondary :  '#fff8e1',
+      primary : '#fff8e1',
+      secondary :  '#000',
     }
   },
   //mixins - ccustom objects, inspecct component implementation to be aware of more of
   mixins : {
     toolbar : {
-      minHeight : 56,
-      '@media (min-width:0px) and (orientation: landscape)': {
-        minHeight : 72
+      minHeight : 34,
+      '@media (min-width:0px)': {
+        minHeight : 34
       },
       '@media (min-width:600px)': {
-        minHeight: 64
+        minHeight: 52
       },
       '@media (min-width:1020px)': {
-        minHeight: 80
+        minHeight: 64
       }
     }
   },
