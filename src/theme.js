@@ -36,13 +36,13 @@ const defaultTheme = createMuiTheme({
     },
     error: red,
     background: {
-      default: "#3f51b5",
+      default: "#282c34",
       paper: "#3f51b5",
       toolbar: '#000',
       button : red['A200']
     },
     text : {
-      primary : '#000',
+      primary : '#fff8e1',
       secondary :  '#fff8e1',
     }
   },

@@ -52,10 +52,9 @@ export default function() {
         paper: classes.drawerPaper
       }}
     >
-      <div className={classes.drawerHeader} style={{backgroundColor : '#3f51b5', justifyContent: 'flex-start'}}>
+      <div className={classes.drawerHeader} style={{backgroundColor : '#3f51b5', justifyContent: 'center'}}>
         <Typography
           variant='h6'
-          align='left'
         >
           Operators
         </Typography>
@@ -106,19 +105,21 @@ export default function() {
           </div>
         )}
       </Droppable>
-      {this.state.flagList.map((flag, index) => (
-        <Button
-          key={flag.id}
-          variant="outlined"
-          size="medium"
-          style={{border: '2px solid #282c34'}}
-          onClick={() => this.handleFlagClick(flag.id)}
-          // className={classes.button}
-        >
-          <Typography component="h4">{flag.content}</Typography>
-          {flag.flagged ? <Flag /> : <OutlinedFlag />}
-        </Button>
-      ))}
+      <Grid container style={{padding : '5px'}} direction='column' justify='center'>
+        {this.state.flagList.map((flag, index) => (
+          <Button
+            key={flag.id}
+            variant="outlined"
+            size="small"
+            style={{border: '2px solid #282c34',marginBottom: '15px', width: '100%', minHeight: '60px'}}
+            onClick={() => this.handleFlagClick(flag.id)}
+            // className={classes.button}
+          >
+            <Typography component="h4">{flag.content}</Typography>
+            {flag.flagged ? <Flag /> : <OutlinedFlag />}
+          </Button>
+        ))}
+      </Grid>
       {/* </DragDropContext> */}
     </Drawer>
     )
