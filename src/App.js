@@ -102,11 +102,17 @@ const getFlags = () => [
   }
 ]
 
-const getItems = count => [
+const getOperators = () => [
   {
     id: 'anchorStartsWith',
     content: 'starts with',
     expression: '^',
+    value: ''
+  },
+  {
+    id: 'character',
+    content: 'Character',
+    expression: '',
     value: ''
   },
   {
@@ -190,13 +196,13 @@ const getListStyle = isDraggingOver => ({
 class App extends React.Component {
   state = {
     open: false,
-    draggableList: getItems(5),
+    operatorsList: getOperators(),
     flagList: getFlags(),
     selectedList: []
   }
 
   id2List = {
-    droppable: 'draggableList',
+    droppable: 'operatorsList',
     droppable2: 'selectedList'
   }
 
@@ -253,7 +259,7 @@ class App extends React.Component {
         destination
       )
       this.setState({
-        draggableList: result.droppable,
+        operatorsList: result.droppable,
         selectedList: result.droppable2
       })
     }
@@ -352,7 +358,7 @@ class App extends React.Component {
                   ref={provided.innerRef}
                   style={getListStyle(snapshot.isDraggingOver)}
                 >
-                  {this.state.draggableList.map((item, index) => (
+                  {this.state.operatorsList.map((item, index) => (
                     <Draggable
                       key={item.id}
                       draggableId={item.id}
@@ -452,6 +458,34 @@ class App extends React.Component {
                               // onDelete={handleDelete}
                               // deleteIcon={<DoneIcon />}
                             />
+                            {item.id === 'character' && (
+                              <TextField
+                                // label="Enter Any Character"
+                                className={classes.textField}
+                                value={this.state.selectedList[index].value}
+                                onChange={e => {
+                                  e.preventDefault()
+
+                                  if (e.target.value.length > 1) return
+
+                                  const { selectedList } = this.state
+
+                                  selectedList[index].value = e.target.value
+                                  this.setState({ selectedList })
+                                }}
+                                margin="dense"
+                                variant="outlined"
+                                style={{ width: 50 }}
+                                // InputProps={{
+                                //   inputProps: {
+                                //     style: { fontSize: 12 }
+                                //   }
+                                // }}
+                                InputLabelProps={{
+                                  root: { style: { fontSize: 12 } }
+                                }}
+                              />
+                            )}
                           </div>
                         )}
                       </Draggable>
