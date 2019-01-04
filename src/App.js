@@ -1,27 +1,27 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import classNames from 'classnames'
-import Avatar from '@material-ui/core/Avatar'
-import Button from '@material-ui/core/Button'
-import Chip from '@material-ui/core/Chip'
-import { withStyles } from '@material-ui/core/styles'
-import Drawer from '@material-ui/core/Drawer'
-import Grid from '@material-ui/core/Grid'
-import TextField from '@material-ui/core/TextField'
-import CssBaseline from '@material-ui/core/CssBaseline'
-import AppBar from '@material-ui/core/AppBar'
-import Toolbar from '@material-ui/core/Toolbar'
-import Typography from '@material-ui/core/Typography'
-import Divider from '@material-ui/core/Divider'
-import IconButton from '@material-ui/core/IconButton'
-import MenuIcon from '@material-ui/icons/Menu'
-import ChevronLeftIcon from '@material-ui/icons/ChevronLeft'
-import ChevronRightIcon from '@material-ui/icons/ChevronRight'
-import Flag from '@material-ui/icons/Flag'
-import OutlinedFlag from '@material-ui/icons/OutlinedFlag'
-import Preview from './components/Preview'
+import {
+  Avatar,
+  Button,
+  Grid,
+  TextField,
+  CssBaseline,
+  AppBar,
+  Toolbar,
+  Divider,
+  IconButton,
+  Typography,
+  Chip
+} from '@material-ui/core';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
+import { withStyles } from '@material-ui/core/styles'
 
+import MenuIcon from '@material-ui/icons/Menu'
+import UnbindedLeftDashboard from './LeftDashboard'
+import UnbindedWhiteBoard from './WhiteBoard'
+
+import data from './data';
 const drawerWidth = 240
 
 const styles = theme => ({
@@ -81,72 +81,22 @@ const styles = theme => ({
   }
 })
 
-const getFlags = () => [
-  {
-    id: 'flagGlobal',
-    content: 'Search over the entire provided text',
-    expression: 'g',
-    flagged: true
-  },
-  {
-    id: 'flagCaseInsensitive',
-    content: 'Case Insensitive',
-    expression: 'i',
-    flagged: true
-  },
-  {
-    id: 'flagSplitter',
-    content: 'Evaluate each word of the text separately',
-    expression: 'splitter',
-    flagged: true
-  }
-]
+const grid = 8;
 
-const getOperators = () => [
-  {
-    id: 'anchorStartsWith',
-    content: 'starts with',
-    expression: '^',
-    value: ''
-  },
-  {
-    id: 'character',
-    content: 'Character',
-    expression: '',
-    value: ''
-  },
-  {
-    id: 'anyCharacter',
-    position: 'pre',
-    content: 'Any Character',
-    expression: '.',
-    value: ''
-  },
-  {
-    id: 'quantifierAnyNumberOfTimes',
-    content: 'Any Number of Times',
-    expression: '*',
-    value: ''
-  },
-  {
-    id: 'rangeOpen',
-    content: 'Start Range',
-    expression: '[',
-    value: ''
-  },
-  {
-    id: 'rangeClose',
-    content: 'Close Range',
-    expression: ']',
-    value: ''
-  },
-  {
-    id: 'anchorEndsWith',
-    content: 'ends with',
-    expression: '$',
-    value: ''
-  }
-]
+const getItemStyle = (isDragging, draggableStyle) => ({
+  // some basic styles to make the items look a bit nicer
+  userSelect: 'none',
+  padding: grid * 2,
+  margin: `0 0 ${grid}px 0`,
+
+  // change background colour if dragging
+  background: isDragging ? 'lightgreen' : 'grey',
+
+  // styles we need to apply on draggables
+  ...draggableStyle
+})
+
+
 
 // a little function to help us with reordering the result
 const reorder = (list, startIndex, endIndex) => {
@@ -172,32 +122,14 @@ const move = (source, destination, droppableSource, droppableDestination) => {
   return result
 }
 
-const grid = 8
 
-const getItemStyle = (isDragging, draggableStyle) => ({
-  // some basic styles to make the items look a bit nicer
-  userSelect: 'none',
-  padding: grid * 2,
-  margin: `0 0 ${grid}px 0`,
-
-  // change background colour if dragging
-  background: isDragging ? 'lightgreen' : 'grey',
-
-  // styles we need to apply on draggables
-  ...draggableStyle
-})
-
-const getListStyle = isDraggingOver => ({
-  background: isDraggingOver ? 'lightblue' : 'lightgrey',
-  padding: grid,
-  width: 250
-})
 
 class App extends React.Component {
+
   state = {
-    open: false,
-    operatorsList: getOperators(),
-    flagList: getFlags(),
+    open: true,
+    operatorsList: data.getOperators(),
+    flagList: data.getFlags(),
     selectedList: []
   }
 
@@ -277,6 +209,8 @@ class App extends React.Component {
   }
 
   render() {
+    const LeftDashboard = UnbindedLeftDashboard.bind(this);
+    const WhiteBoard = UnbindedWhiteBoard.bind(this);
     const { classes, theme } = this.props
     const { open } = this.state
 
@@ -304,197 +238,32 @@ class App extends React.Component {
     try {
       new RegExp(concatenatedExpression, flags)
       expression = new RegExp(concatenatedExpression, flags)
+      this.regexError = ''
+      this.regexSource = expression.source;
     } catch (err) {
       expression = ''
+      console.log(err)
+      this.regexError = 'This regex executes with Error. :(';
+
     }
     console.log('EXPRESSION IS', expression)
     return (
       <DragDropContext onDragEnd={this.onDragEnd}>
         <div className={classes.root}>
           <CssBaseline />
-          <AppBar
-            position="fixed"
-            className={classNames(classes.appBar, {
-              [classes.appBarShift]: open
-            })}
-          >
-            <Toolbar disableGutters={!open}>
-              <IconButton
-                color="inherit"
-                aria-label="Open drawer"
-                onClick={this.handleDrawerOpen}
-                className={classNames(classes.menuButton, open && classes.hide)}
-              >
-                <MenuIcon />
-              </IconButton>
-              <Typography variant="h6" color="inherit" noWrap>
-                Persistent drawer
-              </Typography>
-            </Toolbar>
-          </AppBar>
-          <Drawer
-            className={classes.drawer}
-            variant="persistent"
-            anchor="left"
-            open={open}
-            classes={{
-              paper: classes.drawerPaper
-            }}
-          >
-            <div className={classes.drawerHeader}>
-              <IconButton onClick={this.handleDrawerClose}>
-                {theme.direction === 'ltr' ? (
-                  <ChevronLeftIcon />
-                ) : (
-                  <ChevronRightIcon />
-                )}
-              </IconButton>
-            </div>
-            <Divider />
-            {/* <DragDropContext onDragEnd={this.onDragEnd}> */}
-            <Droppable droppableId="droppable">
-              {(provided, snapshot) => (
-                <div
-                  ref={provided.innerRef}
-                  style={getListStyle(snapshot.isDraggingOver)}
-                >
-                  {this.state.operatorsList.map((item, index) => (
-                    <Draggable
-                      key={item.id}
-                      draggableId={item.id}
-                      index={index}
-                    >
-                      {(provided, snapshot) => (
-                        <div
-                          ref={provided.innerRef}
-                          {...provided.draggableProps}
-                          {...provided.dragHandleProps}
-                          style={getItemStyle(
-                            snapshot.isDragging,
-                            provided.draggableProps.style
-                          )}
-                        >
-                          <Chip
-                            avatar={<Avatar>{item.expression}</Avatar>}
-                            label={item.content}
-                            clickable
-                            className={classes.chip}
-                            // color="primary"
-                            // onDelete={handleDelete}
-                            // deleteIcon={<DoneIcon />}
-                          />
-                        </div>
-                      )}
-                    </Draggable>
-                  ))}
-                  {provided.placeholder}
-                </div>
-              )}
-            </Droppable>
-            {this.state.flagList.map((flag, index) => (
-              <Button
-                key={flag.id}
-                variant="outlined"
-                size="small"
-                onClick={() => this.handleFlagClick(flag.id)}
-                // className={classes.button}
-              >
-                <Typography component="h4">{flag.content}</Typography>
-                {flag.flagged ? <Flag /> : <OutlinedFlag />}
-              </Button>
-            ))}
-            {/* </DragDropContext> */}
-          </Drawer>
+
+          <LeftDashboard  />
           <main
             className={classNames(classes.content, {
               [classes.contentShift]: open
             })}
           >
             <div className={classes.drawerHeader} />
-            <Grid item style={{ flex: '0.1 0 10%' }}>
-              <Typography
-                style={{ color: 'white' }}
-                variant="h5"
-                component="h2"
-              >
-                Learn Regex
-              </Typography>
-            </Grid>
+
             <Grid item style={{ flex: '0.5 0 50%' }}>
               {/* <Preview {...this.props} /> */}
               {/* <DragDropContext onDragEnd={this.onDragEnd2}> */}
-              <Droppable droppableId="droppable2">
-                {(provided, snapshot) => (
-                  <div
-                    ref={provided.innerRef}
-                    style={{
-                      backgroundColor: 'white',
-                      width: 300,
-                      height: 300
-                    }}
-                  >
-                    {this.state.selectedList.map((item, index) => (
-                      <Draggable
-                        key={item.id}
-                        draggableId={item.id}
-                        index={index}
-                      >
-                        {(provided, snapshot) => (
-                          <div
-                            ref={provided.innerRef}
-                            {...provided.draggableProps}
-                            {...provided.dragHandleProps}
-                            style={getItemStyle(
-                              snapshot.isDragging,
-                              provided.draggableProps.style
-                            )}
-                          >
-                            <Chip
-                              avatar={<Avatar>{item.expression}</Avatar>}
-                              label={item.content}
-                              clickable
-                              className={classes.chip}
-                              // color="primary"
-                              // onDelete={handleDelete}
-                              // deleteIcon={<DoneIcon />}
-                            />
-                            {item.id === 'character' && (
-                              <TextField
-                                // label="Enter Any Character"
-                                className={classes.textField}
-                                value={this.state.selectedList[index].value}
-                                onChange={e => {
-                                  e.preventDefault()
-
-                                  if (e.target.value.length > 1) return
-
-                                  const { selectedList } = this.state
-
-                                  selectedList[index].value = e.target.value
-                                  this.setState({ selectedList })
-                                }}
-                                margin="dense"
-                                variant="outlined"
-                                style={{ width: 50 }}
-                                // InputProps={{
-                                //   inputProps: {
-                                //     style: { fontSize: 12 }
-                                //   }
-                                // }}
-                                InputLabelProps={{
-                                  root: { style: { fontSize: 12 } }
-                                }}
-                              />
-                            )}
-                          </div>
-                        )}
-                      </Draggable>
-                    ))}
-                    {provided.placeholder}
-                  </div>
-                )}
-              </Droppable>
-              {/* </DragDropContext> */}
+              <WhiteBoard />
             </Grid>
             <Grid item style={{ flex: '0.1 0 10%', width: '100%' }}>
               <TextField
