@@ -104,21 +104,7 @@ export default function() {
           </div>
         )}
       </Droppable>
-      <Grid container style={{padding : '5px', minHeight: 270}} direction='column' justify='center'>
-        {this.state.flagList.map((flag, index) => (
-          <Button
-            key={flag.id}
-            variant="outlined"
-            size="small"
-            style={{border: '2px solid #282c34',marginBottom: '15px', width: '100%', minHeight: '60px'}}
-            onClick={() => this.handleFlagClick(flag.id)}
-            // className={classes.button}
-          >
-            <Typography component="h4">{flag.content}</Typography>
-            {flag.flagged ? <Flag /> : <OutlinedFlag />}
-          </Button>
-        ))}
-      </Grid>
+
       {/* </DragDropContext> */}
     </Drawer>
     )

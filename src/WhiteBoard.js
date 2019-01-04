@@ -32,8 +32,6 @@ const getListStyle = isDraggingOver => ({
 const getItemStyle = (isDragging, draggableStyle) => ({
   // some basic styles to make the items look a bit nicer
   userSelect: 'none',
-  padding: grid * 2,
-  margin: `0 0 ${grid}px 0`,
   // change background colour if dragging
 
   // styles we need to apply on draggables
@@ -124,10 +122,29 @@ export default function() {
             )}
           </Droppable>
         </Grid>
+        <Grid item container style={{padding : '5px'}} justify='center'>
+          {this.state.flagList.map((flag, index) => (
+            <Button
+              key={flag.id}
+              variant="outlined"
+              size="small"
+              style={{
+              border: '2px solid #282c34',
+              marginBottom: '15px',
+              backgroundColor : '#3f51b5',
+               minHeight: '60px'}}
+              onClick={() => this.handleFlagClick(flag.id)}
+              // className={classes.button}
+            >
+              <Typography component="h4">{flag.content}</Typography>
+              {flag.flagged ? <Flag /> : <OutlinedFlag />}
+            </Button>
+          ))}
+        </Grid>
         <Grid item>
-        <Typography variant='h4' color={this.regexError && 'error'}>
-          {this.regexError ? this.regexError : `Expressive (Regex) : ${this.regexSource}`}
-        </Typography>
+          <Typography variant='h4' color={this.regexError && 'error'}>
+            {this.regexError ? this.regexError : `Result - Expressive Regex : ${this.regexSource}`}
+          </Typography>
         </Grid>
       </Grid>
     )

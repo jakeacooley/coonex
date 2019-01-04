@@ -294,13 +294,32 @@ class App extends React.Component {
               </Typography>
             </Grid>*/}
             <Grid item style={{ flex: '0.3 0 30%', width: '100%' }}>
-              <Typography variant="h4" align="center" color="secondary">
-                Rsultsss
+              <Typography variant="h4" align="center" >
+                Result
               </Typography>
-              <Typography style={{ color: 'green' }} variant="h4" component="p">
-                {this.state.text && this.state.text.match(expression)}
-              </Typography>
+              {this.state.text && this.state.flagList[2].flagged ?
+                <Grid container direction='column'>
+                    <Typography variant="h4">
+                      Words Matching :
+                    </Typography>
+                  {this.state.text.split(' ').filter(e => e !== ' ').map((string, index) => (
+                    <Grid item>
+                      <Typography variant="h4">
+                        {string.match(expression)}
+                      </Typography>
+                    </Grid>
+                  )
+                  )}
+                </Grid>
+              : <Typography variant="h4" component="p">
+                <Typography variant="h6">
+                   { this.state.text && `Matching :` }
+                </Typography>
+                  {this.state.text && this.state.text.match(expression)}
+                </Typography>
+            }
             </Grid>
+
           </main>
         </div>
       </DragDropContext>
