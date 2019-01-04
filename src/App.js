@@ -13,7 +13,7 @@ import {
   IconButton,
   Typography,
   Chip
-} from '@material-ui/core'
+} from '@material-ui/core';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 import { withStyles } from '@material-ui/core/styles'
 
@@ -21,7 +21,7 @@ import MenuIcon from '@material-ui/icons/Menu'
 import UnbindedLeftDashboard from './LeftDashboard'
 import UnbindedWhiteBoard from './WhiteBoard'
 
-import data from './data'
+import data from './data';
 const drawerWidth = 240
 
 const styles = theme => ({
@@ -81,7 +81,7 @@ const styles = theme => ({
   }
 })
 
-const grid = 8
+const grid = 8;
 
 const getItemStyle = (isDragging, draggableStyle) => ({
   // some basic styles to make the items look a bit nicer
@@ -96,6 +96,8 @@ const getItemStyle = (isDragging, draggableStyle) => ({
   ...draggableStyle
 })
 
+
+
 // a little function to help us with reordering the result
 const reorder = (list, startIndex, endIndex) => {
   const result = Array.from(list)
@@ -106,30 +108,12 @@ const reorder = (list, startIndex, endIndex) => {
 }
 
 // Moves an item from one list to another list.
-// const move = (source, destination, droppableSource, droppableDestination) => {
-//   const sourceClone = Array.from(source)
-//   const destClone = Array.from(destination)
-//   const [removed] = sourceClone.splice(droppableSource.index, 1)
-
-//   destClone.splice(droppableDestination.index, 0, removed)
-
-//   const result = {}
-//   result[droppableSource.droppableId] = sourceClone
-//   result[droppableDestination.droppableId] = destClone
-
-//   return result
-// }
 const move = (source, destination, droppableSource, droppableDestination) => {
   const sourceClone = Array.from(source)
-  let destClone = Array.from(destination)
+  const destClone = Array.from(destination)
+  const [removed] = sourceClone.splice(droppableSource.index, 1)
 
-  if (droppableDestination.droppableId === 'droppable') {
-    const [removed] = sourceClone.splice(droppableSource.index, 1)
-    destClone.splice(droppableDestination.index, 0, removed)
-  } else {
-    destClone[droppableDestination.index] = sourceClone[droppableSource.index]
-    destClone = reorder(destClone)
-  }
+  destClone.splice(droppableDestination.index, 0, removed)
 
   const result = {}
   result[droppableSource.droppableId] = sourceClone
@@ -138,7 +122,10 @@ const move = (source, destination, droppableSource, droppableDestination) => {
   return result
 }
 
+
+
 class App extends React.Component {
+
   state = {
     open: true,
     operatorsList: data.getOperators(),
@@ -222,8 +209,8 @@ class App extends React.Component {
   }
 
   render() {
-    const LeftDashboard = UnbindedLeftDashboard.bind(this)
-    const WhiteBoard = UnbindedWhiteBoard.bind(this)
+    const LeftDashboard = UnbindedLeftDashboard.bind(this);
+    const WhiteBoard = UnbindedWhiteBoard.bind(this);
     const { classes, theme } = this.props
     const { open } = this.state
 
@@ -252,11 +239,12 @@ class App extends React.Component {
       new RegExp(concatenatedExpression, flags)
       expression = new RegExp(concatenatedExpression, flags)
       this.regexError = ''
-      this.regexSource = expression.source
+      this.regexSource = expression.source;
     } catch (err) {
       expression = ''
       console.log(err)
-      this.regexError = 'This regex executes with Error. :('
+      this.regexError = 'This regex executes with Error. :(';
+
     }
     console.log('EXPRESSION IS', expression)
     return (
@@ -264,14 +252,14 @@ class App extends React.Component {
         <div className={classes.root}>
           <CssBaseline />
 
-          <LeftDashboard />
+          <LeftDashboard  />
           <main
             className={classNames(classes.content, {
               [classes.contentShift]: open
             })}
           >
             <Grid item style={{ flex: '0.5 0 50%' }}>
-              <Typography variant='h2' align='center'>
+              <Typography variant='h2' align='center' style={{marginBottom : 50}}>
                 Regex Whiteboard
               </Typography>
               <>
@@ -285,10 +273,10 @@ class App extends React.Component {
                 value={this.state.text}
                 onChange={this.handleChange('text')}
                 margin="dense"
-                multiline={true}
+                multiline={false}
                 variant="outlined"
-                rowsMax="5"
-                rows="5"
+                rowsMax="2"
+                rows="2"
                 style={{ width: '100%' }}
                 InputProps={{
                   inputProps: {
@@ -306,9 +294,22 @@ class App extends React.Component {
               </Typography>
             </Grid>*/}
             <Grid item style={{ flex: '0.3 0 30%', width: '100%' }}>
-              <Typography variant="h4" align="center" >
-                Result
-              </Typography>
+              <Grid item>
+                {this.regexError ?
+                  <Typography variant='h4' color='error'>
+                     {this.regexError}
+                  </Typography>
+                :
+                  <>
+                    <Typography variant='h4'>
+                      Result - Expressive Regex
+                    </Typography>
+                    <Typography variant='h4' style={{color : 'green'}}>
+                        {this.regexSource}
+                    </Typography>
+                  </>
+                }
+              </Grid>
               {this.state.text && this.state.flagList[2].flagged ?
                 <Grid container direction='column'>
                     <Typography variant="h4">

@@ -83,7 +83,7 @@ export default function() {
                     )}
                   >
                     <Chip
-                      avatar={<Avatar>{item.expression}</Avatar>}
+                      avatar={<Avatar style={{backgroundColor: '#282c34'}}>{item.expression}</Avatar>}
                       label={item.content}
                       clickable
                       color='primary'

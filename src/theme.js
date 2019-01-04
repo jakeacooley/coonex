@@ -25,25 +25,25 @@ const defaultTheme = createMuiTheme({
     primary: {
       light:  '#3f51b5',
       main: '#3f51b5',
-      dark:  '#282c34',
+      dark:  '#fff8e1',
       contrastText : '#fff8e1'
     },
     secondary: {
       light:  '#fff',
-      main: '#000',
+      main: '#fff8e1',
       dark:  `${fade('#000', 0.5)}`,
-      contrastText : '#ff9524'
+      contrastText : '#fff8e1'
     },
     error: red,
     background: {
       default: "#282c34",
       paper: "#3f51b5",
-      toolbar: '#000',
+      toolbar: '#fff8e1',
       button : red['A200']
     },
     text : {
       primary : '#fff8e1',
-      secondary :  '#000',
+      secondary :  '#fff8e1',
     }
   },
   //mixins - ccustom objects, inspecct component implementation to be aware of more of

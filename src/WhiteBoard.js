@@ -52,7 +52,7 @@ export default function() {
                 style={{
                   backgroundColor: 'white',
                   minWidth: 300,
-                  minHeight: '200px'
+                  minHeight: '340px'
                 }}
               >
                 {this.state.selectedList.map((item, index) => (
@@ -141,11 +141,7 @@ export default function() {
             </Button>
           ))}
         </Grid>
-        <Grid item>
-          <Typography variant='h4' color={this.regexError && 'error'}>
-            {this.regexError ? this.regexError : `Result - Expressive Regex : ${this.regexSource}`}
-          </Typography>
-        </Grid>
+        
       </Grid>
     )
     // return (
