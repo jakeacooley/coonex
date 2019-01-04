@@ -9,7 +9,7 @@ export default props => {
   return (
     <Card style={styles.card}>
       <CardContent>
-        <Typography variant="h5" component="h2">
+        <Typography variant="h5" component="h2" color='primary'>
           Preview Window
         </Typography>
       </CardContent>
@@ -21,8 +21,6 @@ const styles = {
   card: {
     // position: 'absolute',
     margin: 10,
-    width: 350,
-    minHeight: 200,
-    alignSelf: 'flex-end'
-  }
+    backgroundColor : 'white'
+    }
 }
