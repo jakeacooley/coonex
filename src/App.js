@@ -258,12 +258,13 @@ class App extends React.Component {
               [classes.contentShift]: open
             })}
           >
-            <div className={classes.drawerHeader} />
-
             <Grid item style={{ flex: '0.5 0 50%' }}>
-              {/* <Preview {...this.props} /> */}
-              {/* <DragDropContext onDragEnd={this.onDragEnd2}> */}
-              <WhiteBoard />
+              <Typography variant='h2' align='center'>
+                Regex Whiteboard
+              </Typography>
+              <>
+                <WhiteBoard />
+              </>
             </Grid>
             <Grid item style={{ flex: '0.1 0 10%', width: '100%' }}>
               <TextField

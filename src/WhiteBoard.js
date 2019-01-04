@@ -73,9 +73,10 @@ export default function() {
                           provided.draggableProps.style
                         )}
                       >
-                        <Grid container style={{
+                        <Grid container direction='column' style={{
                           justifyContent: 'center',
-                          alignItems: 'center'
+                          alignItems: 'center',
+
                         }}>
                             <Chip
                               avatar={<Avatar>{item.expression}</Avatar>}
@@ -102,16 +103,14 @@ export default function() {
                               selectedList[index].value = e.target.value
                               this.setState({ selectedList })
                             }}
-                            margin="dense"
-                            variant="outlined"
-                            style={{ width: 50, height : 30 }}
-                            // InputProps={{
+
+                            style={{ width: 50, height : 30, border : '1px solid' }}                            // InputProps={{
                               //   inputProps: {
                                 //     style: { fontSize: 12 }
                                 //   }
                                 // }}
-                                InputLabelProps={{
-                                  root: { style: { fontSize: 12 } }
+                                inputProps={{
+                                  style: {  color: 'black',paddingTop: '4px', textAlign : 'center' }
                                 }}
                                 />
                               )}

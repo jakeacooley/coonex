@@ -15,7 +15,7 @@ const getFlags = () => [
     id: 'flagSplitter',
     content: 'Evaluate each word of the text separately',
     expression: 'splitter',
-    flagged: true
+    flagged: false
   }
 ];
 

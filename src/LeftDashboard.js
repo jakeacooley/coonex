@@ -22,18 +22,17 @@ import { Droppable, Draggable } from 'react-beautiful-dnd'
 const grid = 8
 
 const getListStyle = isDraggingOver => ({
-  background: isDraggingOver ? 'lightblue' : 'lightgrey',
-  backgroundColor : '#282c34'
+  backgroundColor : '#282c34',
 })
-
 
 const getItemStyle = (isDragging, draggableStyle) => ({
   // some basic styles to make the items look a bit nicer
   userSelect: 'none',
-  padding: grid * 2,
-  margin: `0 0 ${grid}px 0`,
+  paddingTop : 10,
+  paddingLeft : 5,
+  paddingRight : 10,
+  height: 60,
   // change background colour if dragging
-
   // styles we need to apply on draggables
   ...draggableStyle
 })
@@ -52,7 +51,7 @@ export default function() {
         paper: classes.drawerPaper
       }}
     >
-      <div className={classes.drawerHeader} style={{backgroundColor : '#3f51b5', justifyContent: 'center'}}>
+      <div className={classes.drawerHeader} style={{backgroundColor : '#3f51b5', justifyContent: 'center', height : '30px'}}>
         <Typography
           variant='h6'
         >
@@ -91,7 +90,7 @@ export default function() {
                       className={classes.chip}
                       style={{
                         width: '100%',
-                        minHeight: '50px',
+                        minHeight: '40px',
                       }}
                       // color="primary"
                       // onDelete={handleDelete}
@@ -105,7 +104,7 @@ export default function() {
           </div>
         )}
       </Droppable>
-      <Grid container style={{padding : '5px'}} direction='column' justify='center'>
+      <Grid container style={{padding : '5px', minHeight: 270}} direction='column' justify='center'>
         {this.state.flagList.map((flag, index) => (
           <Button
             key={flag.id}
