@@ -99,12 +99,10 @@ const getItemStyle = (isDragging, draggableStyle) => ({
 
 
 // a little function to help us with reordering the result
-const reorder = (list, startIndex, endIndex) => {
-  const result = Array.from(list)
-  const [removed] = result.splice(startIndex, 1)
-  result.splice(endIndex, 0, removed)
 
-  return result
+
+const reorder = (source, destination) => {
+  //
 }
 
 // Moves an item from one list to another list.
@@ -155,45 +153,79 @@ class App extends React.Component {
       [field]: inputValue && inputValue
       // evaluatedText: prevState.text.match(inputValue)
     }))
-    console.log('target value: ', e.target.value)
-    this.evaluateText(this.state.text, e.target.value)
-  }
-  evaluateText = (text, expression) => {
-    // let something = RegExp(expression, 'g')
-    console.log('text: ', text)
-    console.log('expression: ', new String(expression.source))
-    console.log('evaluatedText: ', expression.split(''))
-    return ''
   }
 
-  onDragEnd = result => {
-    // console.log(result)
-    const { source, destination } = result
-    // dropped outside the list
-    if (!destination) {
-      return
+  //if destination is whiteBoard
+  //if source is whiteboard
+  // reoder
+  //if source is Operators
+  // push into selectedList
+  //
+  //if source is whiteboard
+  // remove operator from selectedList
+
+  onDragEnd = ev => {
+    const { source, destination, dragabb } = ev
+    const [ whiteBoard, operators ] = ['droppable2', 'droppable'];
+    if (!destination && source.droppableId === operators) return
+    //splice array if drop dest is different then whiteBoard
+    if (source.droppableId === whiteBoard && (!destination || destination.droppableId !== whiteBoard) ) {
+      return this.setState(prevState => ({
+        selectedList : [
+          ...prevState.selectedList.slice(0, source.index),
+          ...prevState.selectedList.slice(source.index +1)
+        ]
+      }))
     }
-    if (source.droppableId === destination.droppableId) {
-      const newList = reorder(
-        this.getList(source.droppableId),
-        source.index,
-        destination.index
-      )
+    if (destination.droppableId === whiteBoard) {
+      //return if in same position;
+      if(source.droppableId === operators) {
+        const localItem = { ...this.state.operatorsList[source.index] };
+        localItem.id = localItem.id.concat(this.state.selectedList.length);
 
-      let state = { newList }
-      if (source.droppableId === 'droppable2') state = { selected: newList }
-      this.setState(state)
-    } else {
-      const result = move(
-        this.getList(source.droppableId),
-        this.getList(destination.droppableId),
-        source,
-        destination
-      )
-      this.setState({
-        operatorsList: result.droppable,
-        selectedList: result.droppable2
-      })
+        return this.setState(prevState => ({
+          selectedList : [
+            ...prevState.selectedList.slice(0, destination.index),
+            localItem,
+            ...prevState.selectedList.slice(destination.index)
+          ]
+        }))
+      }
+      const draggedItem = this.state.selectedList[source.index];
+
+      /// co
+      const sortDirection = source.index > destination.index ? 'left' : 'right';
+      // walk from dragged item up if left down if right;
+      // check if it is ordered left, walk from source.index to destination.index, moving down each element;
+      // if is ordered right, move from source.index to destination.index moving up each element;
+      // left index
+
+      // iterate over oldArray until find the drag index,  destination index, from there, sort  right
+      const selectedItem = { ...this.state.selectedList[source.index] };
+      selectedItem.id = selectedItem.id.concat(this.state.selectedList.length);
+      if (this.state.selectedList.length > 1) {
+
+        const divisor = sortDirection === 'right' ? source.index : destination.index;
+        if (sortDirection === 'right') {
+          return this.setState({ selectedList : [
+            ...this.state.selectedList.slice(0, source.index),
+            ...this.state.selectedList.slice(source.index+1, destination.index+1),
+            selectedItem,
+            ...this.state.selectedList.slice(destination.index+1)
+          ]});
+        }
+        return this.setState({ selectedList : [
+          ...this.state.selectedList.slice(0, destination.index),
+          selectedItem,
+          ...this.state.selectedList.slice(destination.index, source.index),
+          ...this.state.selectedList.slice(source.index+1)
+        ]});
+      }
+    }
+    return
+
+    if (source.droppableId === 'droppable') {
+
     }
   }
 
@@ -217,7 +249,6 @@ class App extends React.Component {
     let concatenatedExpression = ''
 
     this.state.selectedList.forEach((item, index) => {
-      console.log(item)
       if (index === 0) {
         concatenatedExpression = concatenatedExpression.concat(item.expression)
         return (concatenatedExpression = concatenatedExpression.concat(
@@ -227,7 +258,6 @@ class App extends React.Component {
       concatenatedExpression = concatenatedExpression.concat(item.value)
       concatenatedExpression = concatenatedExpression.concat(item.expression)
     })
-    console.log('concat: ', concatenatedExpression)
     let flags = ''
     this.state.flagList.forEach(flag =>
       flag.flagged && flag.id !== 'flagSplitter'
@@ -242,11 +272,9 @@ class App extends React.Component {
       this.regexSource = expression.source;
     } catch (err) {
       expression = ''
-      console.log(err)
       this.regexError = 'This regex executes with Error. :(';
 
     }
-    console.log('EXPRESSION IS', expression)
     return (
       <DragDropContext onDragEnd={this.onDragEnd}>
         <div className={classes.root}>

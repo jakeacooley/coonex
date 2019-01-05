@@ -89,7 +89,7 @@ export default function() {
                               // color="primary"
 
                           </Chip>
-                          {item.id === 'character' && (
+                          {item.id.match(/^c\w*\d$/) && (
                             <TextField
                             // label="Enter Any Character"
                             className={classes.textField}
@@ -101,7 +101,6 @@ export default function() {
                               selectedList[index].value = e.target.value
                               this.setState({ selectedList })
                             }}
-
                             style={{ width: 50, height : 30, border : '1px solid' }}                            // InputProps={{
                               //   inputProps: {
                                 //     style: { fontSize: 12 }
@@ -141,7 +140,7 @@ export default function() {
             </Button>
           ))}
         </Grid>
-        
+
       </Grid>
     )
     // return (
